@@ -1,0 +1,14 @@
+Rake::Variables allow you to get and set namespaces variables in rake tasks
+
+Examples:
+
+set :my_var, "foo"
+task :show {|task| p get(:my_var)} # => "foo"
+
+namespace :ns do
+  set :my_var, "bar"
+  task :show {|task| p get(:ns_var) } # => "bar"
+end
+
+# Find a var in a different namespace
+task :show_in_ns {|task| p get("ns:my_var")} # "bar"
