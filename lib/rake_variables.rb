@@ -25,7 +25,7 @@ module Rake
         get_in_scope(var, scopes)
       end
       
-      # Lookup the variable name
+      # Private method to find the variable in each scope
       def get_in_scope(var, scope)
         n = scope.size
         while n >= 0
@@ -38,6 +38,7 @@ module Rake
       end
       private :get_in_scope
       
+      # Set the variable
       def set(var, value, scope=nil)
         k = ([scope] + [var]).flatten.compact.join(':')
         vars[k] = value
