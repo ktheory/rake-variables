@@ -6,14 +6,6 @@ module Rake
         @vars ||= Hash.new
       end
       
-      def []=(k,v)
-        vars[k]=v
-      end
-      
-      def [](k)
-        vars[k]
-      end
-      
       # Based on Rake::TaskManager#lookup
       # Lookup a variable, using the intial_scope to hint at the full name.
       # If the var begins with 'rake:', only look in the top-level scope.
