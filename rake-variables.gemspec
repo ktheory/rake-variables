@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "rake-variables"
-  s.version  = "0.1"
+  s.version  = "0.2"
   s.date     = "2008-09-25"
   s.summary  = "Get and set namespaces variables in rake tasks"
   s.email    = "aaron@ktheory.com"
@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.description = "Rake Variables extends Rake::NameSpace and Rake::Task to get and set namespaced variables. See Rakefile for examples."
   s.has_rdoc = false
   s.authors  = ["Aaron Suggs"]
-  s.files    = %w(README.txt Rakefile lib/rake_variables.rb)
+  s.files    = %w(History.txt README.txt Rakefile lib/rake_variables.rb)
   s.test_files = []
   # s.rdoc_options = ["--main", "README.txt"]
   # s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt"]
