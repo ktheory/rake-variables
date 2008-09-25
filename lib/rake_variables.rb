@@ -1,0 +1,74 @@
+require 'rake'
+module Rake
+  class Variable
+    class << self
+      def vars
+        @vars ||= Hash.new
+      end
+      
+      def []=(k,v)
+        vars[k]=v
+      end
+      
+      def [](k)
+        vars[k]
+      end
+      
+      # =======
+      # = get =
+      # =======
+      #
+      # Based on Rake::TaskManager#lookup
+      # Lookup a variable, using scope and the scope hints variable name.
+      # This method performs straight lookups without trying to
+      # synthesize file tasks or rules.  Special scope names (e.g. '^')
+      # are recognized.  If no scope argument is supplied, use the
+      # current scope.  Return nil if the task cannot be found.
+      def get(var, initial_scope=[])
+        var = var.to_s
+        if var =~ /^rake:/
+          scopes = []
+          var = var.sub(/^rake:/, '')
+        elsif var =~ /^(\^+)/
+          scopes = initial_scope[0, initial_scope.size - $1.size]
+          var = var.sub(/^(\^+)/, '')
+        else
+          scopes = initial_scope
+        end
+        get_in_scope(var, scopes)
+      end
+      
+      # Lookup the variable name
+      def get_in_scope(var, scope)
+        n = scope.size
+        while n >= 0
+          vn = (scope[0,n] + [var]).join(':')
+          value = vars[vn]
+          return value if value
+          n -= 1
+        end
+        nil
+      end
+      private :get_in_scope
+      
+      def set(var, value, scope=nil)
+        k = ([scope] + [var]).flatten.compact.join(':')
+        vars[k] = value
+      end
+      
+    end
+  end
+
+  # Add +get+ and +set+ methods on Rake::NameSpace and Rake::Task
+  module Extensions
+    def get(var)
+      Rake::Variable.get(var, @scope)
+    end
+
+    def set(var, value)
+      Rake::Variable.set(var, value, @scope)
+    end
+  end
+  Rake::NameSpace.send(:include, Extensions)
+  Rake::Task.send(:include, Extensions)
+end
