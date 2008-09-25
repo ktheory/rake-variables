@@ -14,16 +14,11 @@ module Rake
         vars[k]
       end
       
-      # =======
-      # = get =
-      # =======
-      #
       # Based on Rake::TaskManager#lookup
-      # Lookup a variable, using scope and the scope hints variable name.
-      # This method performs straight lookups without trying to
-      # synthesize file tasks or rules.  Special scope names (e.g. '^')
-      # are recognized.  If no scope argument is supplied, use the
-      # current scope.  Return nil if the task cannot be found.
+      # Lookup a variable, using the intial_scope to hint at the full name.
+      # If the var begins with 'rake:', only look in the top-level scope.
+      # Prepend the var with '^' to search a higher scope.
+      # Returns nil if the var cannot be found.
       def get(var, initial_scope=[])
         var = var.to_s
         if var =~ /^rake:/
