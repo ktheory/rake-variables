@@ -1,0 +1,7 @@
+= Version 0.2 =
+ * Removed extraneous hash-like methods on Rake::Variable.
+   Just use Rake::Variable.get and Rake::Variable.set instead
+
+= Version 0.1 =
+
+ * initial commit
