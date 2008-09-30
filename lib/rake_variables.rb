@@ -89,4 +89,11 @@ module Rake
   # Define universal get & set methods on all objects
   Object.send(:define_method, :get) { |k| Rake::Variable.get(k) }
   Object.send(:define_method, :set) { |k,v| Rake::Variable.set(k,v) }
+  # Object.send(:define_method, :method_missing) do |meth|
+  #   begin
+  #     get(meth.id2name)
+  #   rescue Rake::UndefinedVariable
+  #     super
+  #   end
+  # end
 end
