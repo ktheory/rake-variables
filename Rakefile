@@ -23,6 +23,8 @@ task :default => :test
 Rake::Variable.set(:favorite, "everything")
 assert(Rake::Variable.get(:favorite) == "everything")
 
+Rake::Variable.set(:foo, "foo")
+
 # Set a scoped variable
 Rake::Variable.set("plants:favorite", "orchids")
 assert(Rake::Variable.get("plants:favorite") == "orchids")
@@ -48,16 +50,18 @@ namespace :animals do |ns| # Be sure to pass the NameSpace as a block var
   # Set a variable in a namespace
   ns.set(:favorite, "Animal from The Muppets")
   assert(ns.get(:favorite) == "Animal from The Muppets")
+  # Test method_missing shorthand
+  assert(ns.favorite == "Animal from The Muppets")
   
   task :test do |t|
     # Read a namespace var within a test
     assert(t.get(:favorite) == "Animal from The Muppets")
-
+    assert(t.favorite == "Animal from The Muppets")
     # Find a var from a different namespace
     assert(t.get("plants:favorite") == "orchids")
-    
+
     # Get a var from a higher namespace
     assert((t.get"^favorite") == "everything")
-
+    assert(t.foo == "foo")
   end
 end

@@ -58,6 +58,15 @@ module Rake
     def set(var, value)
       Rake::Variable.set(var, value, @scope)
     end
+    
+    def method_missing(meth, *args)
+      var = meth.id2name
+      if var =~ /=$/ && 1 == args.size
+        self.set(var.chop!, args.first)
+      else
+        self.get(var)
+      end
+    end
   end
   Rake::NameSpace.send(:include, Extensions)
   Rake::Task.send(:include, Extensions)
