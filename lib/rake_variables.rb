@@ -1,11 +1,22 @@
 require 'rake'
+require 'thread'
+
 module Rake
   # raised when getting a variable that has not be assigned
   class UndefinedVariable < Exception; end
+  
+  # raised when setting a variable for the second time
+  class VariableAlreadyDefined < Exception; end
+  
   class Variable
     class << self
       def vars
         @vars ||= Hash.new
+      end
+      
+      def mutex
+        # Use a mutex for getting & setting each var
+        @mutex ||= Hash.new(Mutex.new)
       end
       
       # Based on Rake::TaskManager#lookup
@@ -32,7 +43,8 @@ module Rake
         n = scope.size
         while n >= 0
           vn = (scope[0,n] + [var]).join(':')
-          value = vars[vn]
+          value = nil
+          mutex[vn].synchronize { value = vars[vn] }
           return value if value
           n -= 1
         end
@@ -43,7 +55,10 @@ module Rake
       # Set the variable
       def set(var, value, scope=nil)
         k = ([scope] + [var]).flatten.compact.join(':')
-        vars[k] = value
+        mutex[k].synchronize do
+          raise(VariableAlreadyDefined, "#{k} is already defined") if vars.key?(k)
+          vars[k] = value
+        end
       end
       
     end
@@ -70,4 +85,8 @@ module Rake
   end
   Rake::NameSpace.send(:include, Extensions)
   Rake::Task.send(:include, Extensions)
+
+  # Define universal get & set methods on all objects
+  Object.send(:define_method, :get) { |k| Rake::Variable.get(k) }
+  Object.send(:define_method, :set) { |k,v| Rake::Variable.set(k,v) }
 end
