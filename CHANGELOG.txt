@@ -1,0 +1,12 @@
+Version 0.3
+
+ * Thread-safe variable access
+ * Cleaner variable assignment with method_missing
+
+Version 0.2
+
+ * Bugfixes
+
+Version 0.1
+
+ * Initial checkin
