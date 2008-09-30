@@ -1,5 +1,7 @@
 require 'rake'
 module Rake
+  # raised when getting a variable that has not be assigned
+  class UndefinedVariable < Exception; end
   class Variable
     class << self
       def vars
@@ -34,7 +36,7 @@ module Rake
           return value if value
           n -= 1
         end
-        nil
+        raise UndefinedVariable, "Undefined variable '#{var}' in scope: #{scope.inspect}"
       end
       private :get_in_scope
       
