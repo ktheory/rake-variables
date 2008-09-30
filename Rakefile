@@ -16,7 +16,6 @@ def assert_undefined &block
   end
 end
 
-
 task :default => :test
 
 # Set a top-level variable outside of a Task or NameSpace
