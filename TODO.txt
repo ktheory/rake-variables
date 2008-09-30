@@ -1,0 +1,9 @@
+
+ * Hash-like variable accessors, e.g.
+   t[:foo] = "bar"
+   ns[:foo]
+   
+ * Assign blocks as variables values which are called (the first time/ every time?)
+   the var is fetched
+   ns.set(:foo) { Time.now }
+   ns.get(:foo) # => Time.now
